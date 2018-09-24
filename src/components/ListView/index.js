@@ -32,11 +32,16 @@ const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
 );
 
 export default class ListView extends React.Component {
-  state = {
-    isShowingItemCreator: false,
-    creatorValue: "",
-    items: []
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isShowingItemCreator: false,
+      creatorValue: "",
+      items: this.props.data.items
+    };
+  }
+  state = {};
 
   createItem() {
     this.setState({

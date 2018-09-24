@@ -17,8 +17,3 @@
   min-height: 100px;
   box-sizing: border-box;
 }
-
-.item-creator {
-  display: inline-block;
-  vertical-align: middle;
-}
