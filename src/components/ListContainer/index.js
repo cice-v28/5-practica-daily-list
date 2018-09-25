@@ -31,43 +31,23 @@ const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
 );
 
 export default class ListContainer extends React.Component {
-  state = {
-    isShowingItemCreator: false,
-    creatorValue: "",
-    lists: [
-      {
-        id: "1",
-        items: [
-          {
-            id: Date().now,
-            value: "item 1",
-            listId: null
-          },
-          {
-            id: Date().now,
-            value: "item 2",
-            listId: null
-          }
-        ]
-      }
-    ],
-    currentList: "1"
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isShowingItemCreator: false,
+      creatorValue: ""
+    };
+  }
 
   createItem() {
-    const cloneLists = [...this.state.lists];
-    const currentList = cloneLists.find(
-      list => list.id === this.state.currentList
-    );
-
-    currentList.items.push({
+    this.props.onCreateItemList({
       id: Date().now,
       value: this.state.creatorValue,
       listId: this.state.currentList
     });
 
     this.setState({
-      items: cloneLists,
       creatorValue: "",
       isShowingItemCreator: false
     });
@@ -87,7 +67,7 @@ export default class ListContainer extends React.Component {
 
   render() {
     const currentList =
-      this.state.lists.find(item => item.id === this.state.currentList) || {};
+      this.props.lists.find(item => item.id === this.props.currentList) || {};
 
     return (
       <div>
