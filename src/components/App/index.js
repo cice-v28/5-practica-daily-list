@@ -96,6 +96,10 @@ class App extends React.Component {
     isDrawerOpen: false
   };
 
+  componentDidMount() {
+    this.loadLists();
+  }
+
   handleCloseDialog() {
     this.setState({ dialogOpen: false });
   }
@@ -134,6 +138,7 @@ class App extends React.Component {
     );
 
     currentList.items.push(item);
+    this.saveLists();
   }
 
   changeCreatorText(value) {
