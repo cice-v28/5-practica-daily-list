@@ -67,11 +67,11 @@ export default class ListContainer extends React.Component {
 
   render() {
     const currentList =
-      this.props.lists.find(item => item.id === this.props.currentList) || {};
+      this.props.lists.find(list => list.id === this.props.currentList) || {};
 
     return (
       <div>
-        <ListView items={currentList.items} />
+        <ListView listName={currentList.name} items={currentList.items} />
         <Button
           variant="fab"
           className="fab-button"

@@ -71,12 +71,12 @@ const DialogListCreator = ({
   </Dialog>
 );
 
-const MasterList = ({ isOpen, onClose, items }) => (
+const MasterList = ({ isOpen, onClose, items, onSelectList }) => (
   <Drawer open={isOpen} onClose={onClose}>
     <div tabIndex={0} role="button" onClick={onClose} onKeyDown={onClose}>
       <List component="nav">
         {items.map(item => (
-          <ListItem button>
+          <ListItem button onClick={() => onSelectList(item.id)}>
             <ListItemText primary={item.name} />
           </ListItem>
         ))}
@@ -144,6 +144,12 @@ class App extends React.Component {
     });
   }
 
+  selectList(id) {
+    this.setState({
+      currentList: id
+    });
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -181,7 +187,8 @@ class App extends React.Component {
         <main>
           <ListContainer
             lists={this.state.lists}
-            onCreateItemList={item => this.createList(item)}
+            currentList={this.state.currentList}
+            onCreateItemList={item => this.createItemList(item)}
           />
           <DialogListCreator
             valueCreator={this.state.textCreatorList}
@@ -194,6 +201,7 @@ class App extends React.Component {
             items={this.state.lists}
             isOpen={this.state.isDrawerOpen}
             onClose={() => this.closeMasterList()}
+            onSelectList={id => this.selectList(id)}
           />
         </main>
       </React.Fragment>
