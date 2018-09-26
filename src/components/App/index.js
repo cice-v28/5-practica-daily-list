@@ -18,6 +18,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListContainer from "../ListContainer";
+import { connect } from "react-redux";
+import { createList } from "../../state/actions/listActions";
 
 const styles = {
   root: {
@@ -115,6 +117,12 @@ class App extends React.Component {
       dialogOpen: false,
       textCreatorList: ""
     });
+
+    this.props.createList({
+      id: `list-${Date.now()}`,
+      name: this.state.textCreatorList,
+      items: []
+    });
   }
 
   createItemList(item) {
@@ -198,7 +206,7 @@ class App extends React.Component {
             onChangeCreatorText={value => this.changeCreatorText(value)}
           />
           <MasterList
-            items={this.state.lists}
+            items={this.props.lists}
             isOpen={this.state.isDrawerOpen}
             onClose={() => this.closeMasterList()}
             onSelectList={id => this.selectList(id)}
@@ -209,4 +217,15 @@ class App extends React.Component {
   }
 }
 
-export default withStyles(styles)(App);
+const mapStateToProps = state => ({
+  lists: state.lists
+});
+
+const mapDispatchToProps = {
+  createList
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(App));
