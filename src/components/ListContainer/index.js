@@ -4,9 +4,17 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar";
+import Fade from "@material-ui/core/Fade";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import ListView from "../ListView";
 import { connect } from "react-redux";
-import { createListItem } from "../../state/actions/listActions";
+import {
+  createListItem,
+  createListItemFailClear
+} from "../../state/actions/listActions";
 import "./ListContainer.css";
 
 const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
@@ -44,9 +52,10 @@ class ListContainer extends React.Component {
 
   createItem() {
     this.props.createListItem({
-      id: Date().now,
+      id: Date.now(),
       value: this.state.creatorValue,
-      listId: this.state.currentList
+      listId: this.props.currentList,
+      imageUrl: null
     });
 
     this.setState({
@@ -65,6 +74,10 @@ class ListContainer extends React.Component {
     this.setState({
       isShowingItemCreator: true
     });
+  }
+
+  closeSnack() {
+    this.props.createListItemFailClear();
   }
 
   render() {
@@ -91,6 +104,31 @@ class ListContainer extends React.Component {
             />
           </div>
         )}
+        {this.props.isLoading && (
+          <div className="loader">
+            <CircularProgress />
+          </div>
+        )}
+        {this.props.hasError && (
+          <Snackbar
+            open={true}
+            TransitionComponent={Fade}
+            ContentProps={{
+              "aria-describedby": "message-id"
+            }}
+            message={<span id="message-id">{this.props.hasError}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => this.closeSnack()}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+        )}
       </div>
     );
   }
@@ -98,11 +136,14 @@ class ListContainer extends React.Component {
 
 const mapStateToProps = state => ({
   lists: state.lists.rawLists,
-  currentList: state.lists.currentList
+  currentList: state.lists.currentList,
+  isLoading: state.lists.isLoading,
+  hasError: state.lists.error
 });
 
 const mapDispatchToProps = {
-  createListItem
+  createListItem,
+  createListItemFailClear
 };
 
 export default connect(

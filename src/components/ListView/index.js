@@ -16,7 +16,7 @@ export default class ListView extends React.Component {
             {this.props.items &&
               this.props.items.map((item, index) => (
                 <Grid item xs={4} key={`grid-item-${index}`}>
-                  <ItemList text={item.value} />
+                  <ItemList text={item.value} image={item.imageUrl} />
                 </Grid>
               ))}
           </Grid>

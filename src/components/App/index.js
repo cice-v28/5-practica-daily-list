@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import FaceIcon from "@material-ui/icons/Face";
 import PlaylistAdd from "@material-ui/icons/PlaylistAdd";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -20,6 +21,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListContainer from "../ListContainer";
 import { connect } from "react-redux";
 import { createList, selectList } from "../../state/actions/listActions";
+import { setUserData } from "../../state/actions/userActions";
 
 const styles = {
   root: {
@@ -99,6 +101,13 @@ class App extends React.Component {
     isDrawerOpen: false
   };
 
+  async getUserData() {
+    const request = await fetch("https://jsonplaceholder.typicode.com/users");
+    const data = await request.json();
+
+    this.props.setUserData(data[0]);
+  }
+
   handleCloseDialog() {
     this.setState({ dialogOpen: false });
   }
@@ -165,9 +174,26 @@ class App extends React.Component {
                 >
                   Lista de la compra
                 </Typography>
+                {this.props.user.name && (
+                  <Typography
+                    variant="title"
+                    color="inherit"
+                    className={classes.grow}
+                  >
+                    Hola {this.props.user.name}
+                  </Typography>
+                )}
+                <IconButton
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="User"
+                  onClick={() => this.getUserData()}
+                >
+                  <FaceIcon />
+                </IconButton>
                 <IconButton
                   aria-label="Crear lista"
-                  color="secondary"
+                  color="inherit"
                   onClick={() => this.handleOpenDialog()}
                 >
                   <PlaylistAdd />
@@ -198,12 +224,14 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  lists: state.lists.rawLists
+  lists: state.lists.rawLists,
+  user: state.user.data
 });
 
 const mapDispatchToProps = {
   createList,
-  selectList
+  selectList,
+  setUserData
 };
 
 export default connect(
