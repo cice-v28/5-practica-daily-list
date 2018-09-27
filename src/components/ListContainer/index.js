@@ -5,6 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import ListView from "../ListView";
+import { connect } from "react-redux";
+import { createListItem } from "../../state/actions/listActions";
 import "./ListContainer.css";
 
 const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
@@ -30,7 +32,7 @@ const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
   </Paper>
 );
 
-export default class ListContainer extends React.Component {
+class ListContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -41,7 +43,7 @@ export default class ListContainer extends React.Component {
   }
 
   createItem() {
-    this.props.onCreateItemList({
+    this.props.createListItem({
       id: Date().now,
       value: this.state.creatorValue,
       listId: this.state.currentList
@@ -93,3 +95,17 @@ export default class ListContainer extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  lists: state.lists.rawLists,
+  currentList: state.lists.currentList
+});
+
+const mapDispatchToProps = {
+  createListItem
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListContainer);

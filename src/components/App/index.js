@@ -19,7 +19,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListContainer from "../ListContainer";
 import { connect } from "react-redux";
-import { createList } from "../../state/actions/listActions";
+import { createList, selectList } from "../../state/actions/listActions";
 
 const styles = {
   root: {
@@ -77,8 +77,12 @@ const MasterList = ({ isOpen, onClose, items, onSelectList }) => (
   <Drawer open={isOpen} onClose={onClose}>
     <div tabIndex={0} role="button" onClick={onClose} onKeyDown={onClose}>
       <List component="nav">
-        {items.map(item => (
-          <ListItem button onClick={() => onSelectList(item.id)}>
+        {items.map((item, index) => (
+          <ListItem
+            key={`list-item-${index}`}
+            button
+            onClick={() => onSelectList(item.id)}
+          >
             <ListItemText primary={item.name} />
           </ListItem>
         ))}
@@ -91,7 +95,6 @@ class App extends React.Component {
   state = {
     dialogOpen: false,
     textCreatorList: "",
-    lists: [],
     currentList: null,
     isDrawerOpen: false
   };
@@ -106,14 +109,6 @@ class App extends React.Component {
 
   createList() {
     this.setState({
-      lists: [
-        ...this.state.lists,
-        {
-          id: `list-${Date.now()}`,
-          name: this.state.textCreatorList,
-          items: []
-        }
-      ],
       dialogOpen: false,
       textCreatorList: ""
     });
@@ -123,15 +118,6 @@ class App extends React.Component {
       name: this.state.textCreatorList,
       items: []
     });
-  }
-
-  createItemList(item) {
-    const cloneLists = [...this.state.lists];
-    const currentList = cloneLists.find(
-      list => list.id === this.state.currentList
-    );
-
-    currentList.items.push(item);
   }
 
   changeCreatorText(value) {
@@ -153,9 +139,7 @@ class App extends React.Component {
   }
 
   selectList(id) {
-    this.setState({
-      currentList: id
-    });
+    this.props.selectList(id);
   }
 
   render() {
@@ -193,11 +177,7 @@ class App extends React.Component {
           </div>
         </header>
         <main>
-          <ListContainer
-            lists={this.state.lists}
-            currentList={this.state.currentList}
-            onCreateItemList={item => this.createItemList(item)}
-          />
+          <ListContainer />
           <DialogListCreator
             valueCreator={this.state.textCreatorList}
             isOpen={this.state.dialogOpen}
@@ -218,11 +198,12 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  lists: state.lists
+  lists: state.lists.rawLists
 });
 
 const mapDispatchToProps = {
-  createList
+  createList,
+  selectList
 };
 
 export default connect(
