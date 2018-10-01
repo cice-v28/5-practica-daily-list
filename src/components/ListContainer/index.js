@@ -16,6 +16,7 @@ import {
   createListItemFailClear
 } from "../../state/actions/listActions";
 import "./ListContainer.css";
+import { Redirect } from "react-router-dom";
 
 const ItemCreator = ({ creatorValue, changeItemValue, onCreateItem }) => (
   <Paper elevation={1}>
@@ -46,7 +47,8 @@ class ListContainer extends React.Component {
 
     this.state = {
       isShowingItemCreator: false,
-      creatorValue: ""
+      creatorValue: "",
+      isFull: false
     };
   }
 
@@ -58,9 +60,13 @@ class ListContainer extends React.Component {
       imageUrl: null
     });
 
+    const currentList =
+      this.props.lists.find(list => list.id === this.props.currentList) || {};
+
     this.setState({
       creatorValue: "",
-      isShowingItemCreator: false
+      isShowingItemCreator: false,
+      isFull: currentList.items.length >= 3
     });
   }
 
@@ -81,6 +87,10 @@ class ListContainer extends React.Component {
   }
 
   render() {
+    if (this.state.isFull) {
+      return <Redirect to="/fulllist" />;
+    }
+
     const currentList =
       this.props.lists.find(list => list.id === this.props.currentList) || {};
 

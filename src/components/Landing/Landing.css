@@ -1,0 +1,22 @@
+.landing-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: url("/landing-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.landing-content {
+  text-align: center;
+}
+
+.landing-title {
+  margin-bottom: 2rem !important;
+}
+
+.landing-link {
+  text-decoration: none;
+}
